@@ -113,6 +113,20 @@
                     </Link>
                 </li>
 
+               <li class="kt-menu__section ">
+                    <h4 class="kt-menu__section-text">Video Management</h4>
+                    <i class="kt-menu__section-icon flaticon-more-v2">
+                    </i>
+                </li>
+
+                 <li class="kt-menu__item" :class="{ 'kt-menu__item--active': $page.component.startsWith('Admin/videos') }"
+                    aria-haspopup="true">
+                    <Link :href="route('admin.video')" class="kt-menu__link " >
+                        <Icon icon="bxs:videos" color="white" width="24" height="24" class="kt-menu__link-icon" />
+                        <span class="kt-menu__link-text">Videos</span>
+                    </Link>
+                </li>
+
 
 
                  <li class="kt-menu__section ">

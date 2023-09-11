@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('user_videos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('parent_id')->default(0);
-            $table->string('name')->nullable();
-            $table->string('slug')->nullable();
+            $table->foreignId('user_id')->nullable();
+            $table->string('title')->nullable();
+            $table->string('video')->nullable();
             $table->tinyInteger('status')->nullable();
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('user_videos');
     }
 };

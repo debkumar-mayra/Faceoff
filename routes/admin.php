@@ -8,7 +8,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\RolePermissionController;
-
+use App\Http\Controllers\Admin\VideoController;
 
 Route::redirect('/admin', 'admin/login');
 Route::group(['prefix' => 'admin'], function () {
@@ -45,6 +45,11 @@ Route::match(['get','post'],'login', [HomeController::class,'index'])->name('adm
     
     //role  module
     Route::get('roles', [RolePermissionController::class,'index'])->name('role');  
+
+
+     //video  module
+     Route::get('videos', [VideoController::class,'index'])->name('video');  
+
 
     // setting module
     Route::any('setting', [SiteSettingController::class,'setting'])->name('setting'); 

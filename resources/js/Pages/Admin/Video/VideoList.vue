@@ -20,9 +20,7 @@
                 </div>
                 <div class="col-sm-12 col-md-6">
                     <div id="kt_table_1_filter" class="dataTables_filter">
-                       <!-- <Link v-if="filters.category" :href="route('admin.createCategory',{category:filters.category})" class="btn btn-primary">+ Add New</Link>
-
-                       <Link v-else :href="route('admin.createCategory')" class="btn btn-primary">+ Add New </Link> -->
+                       <!-- <Link href="/admin/faq/create" class="btn btn-primary">+ Add New</Link> -->
                         <!-- {{ $search }} -->
                     </div>
                 </div>
@@ -36,21 +34,37 @@
 
 
                             <tr role="row">
-                            <th tabindex="0" aria-controls="kt_table_1" rowspan="1" colspan="1" style="width: 50%;" aria-sort="ascending" aria-label="Agent: activate to sort column descending">Name <i
-                            class="fa fa-fw fa-sort pull-right" style="cursor: pointer;" @click="ListHelper.sortBy('name')"></i>
+
+                           <th tabindex="0" aria-controls="kt_table_1" rowspan="1" colspan="1" style="width: 40%;"
+                            aria-sort="ascending" aria-label="Agent: activate to sort column descending">User<i
+                            class="fa fa-fw fa-sort pull-right" style="cursor: pointer;" @click="ListHelper.sortBy('user_id')"></i>
                             </th>
+
+                            <th tabindex="0" aria-controls="kt_table_1" rowspan="1" colspan="1" style="width: 40%;"
+                            aria-sort="ascending" aria-label="Agent: activate to sort column descending">Title <i
+                            class="fa fa-fw fa-sort pull-right" style="cursor: pointer;" @click="ListHelper.sortBy('title')"></i>
+                            </th>
+
+                           
+
+                             <th tabindex="0" aria-controls="kt_table_1" rowspan="1" colspan="1" style="width: 40%;">Video</th>
+
 
                             <th class="align-center" rowspan="1" colspan="1" style="width: 20%;" aria-label="Actions">Actions</th>
                             </tr>
 
          
                             <tr class="filter">
+
                                 <th>
-                                    <input type="search" v-model="form.name" placeholder="" autocomplete="off"
+                                    <input type="search" v-model="form.user" placeholder="" autocomplete="off"
                                         class="form-control-sm form-filter" />
-                                </th> 
+                                </th>   
 
-
+                                <th>
+                                    <input type="search" v-model="form.title" placeholder="" autocomplete="off"
+                                        class="form-control-sm form-filter" />
+                                </th>                                
                                 <th>
                                     <div class="row justify-content-center align-items-center">
                                     </div>
@@ -59,9 +73,21 @@
 
                         </thead>
                         <tbody v-auto-animate>      
-                            <tr role="row" class="odd" v-for="role in roles.data" :key="role.id">
+                            <tr role="row" class="odd" v-for="video in videos.data" :key="video.id">
+                                 <td class="sorting_1" tabindex="0">
+                                    {{video.user}}
+                                </td>
+
                                 <td class="sorting_1" tabindex="0">
-                                    {{role.name}}
+                                    {{video.title}}
+                                </td>
+
+                                 <td class="sorting_1" tabindex="0">
+                                   <video width="200" height="100" controls>
+                                    <source :src="video.video" type="video/mp4">
+                                    <source :src="video.video" type="video/ogg">
+                                    Your browser does not support the video tag.
+                                    </video>
                                 </td>
 
                                 <td nowrap="" class="align-center">
@@ -70,17 +96,11 @@
                                     <i class="la la-ellipsis-h"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right">
-
-                                        <!-- <Link class="dropdown-item" :href="route('admin.updaterole',role.id)"><i class="la la-edit"></i> Edit</Link> -->
-                                        <button href="#" class="dropdown-item" @click="deleteRecode(role.id)"><i class="fa fa-trash"></i> Delete</button>
+                                        <Link class="dropdown-item" href="#"><i class="la la-edit"></i> Edit</Link>
                                     </div>
                                     </span>
                                 </td>
                             </tr>
-
-                             <tr role="row" v-if="Object.keys(roles.data).length == 0" class="odd text-center">
-                                <td colspan="3" >No data Found</td>
-                             </tr>
                         </tbody>
                     </table>
                 </div>
@@ -89,14 +109,14 @@
         <div class="row">
             <div class="col-sm-12 col-md-5">
                 <div class="dataTables_info" id="kt_table_1_info" role="status" aria-live="polite">
-                    Showing {{roles.from}} to {{roles.to}} of {{roles.total}} entries
+                    Showing {{videos.from}} to {{videos.to}} of {{videos.total}} entries
                 </div>
             </div>
             <div class="col-sm-12 col-md-7">
 
                   <div class="float-right"> 
                      <Bootstrap4Pagination
-                            :data="roles"
+                            :data="videos"
                             :limit=2
                             @pagination-change-page="ListHelper.setPageNum"
                         />
@@ -122,14 +142,15 @@ import ListHelper from '../../../helpers/ListHelper';
 
 
 
-const {roles, filters} = defineProps({ roles: Object, filters: Object });
+const {videos, filters} = defineProps({ videos: Object, filters: Object });
 
 const form = reactive({
-    name: filters.name || null,
+    title: filters.title || null,
+    user: filters.user || null,
 })
 
 watch(form, debounce(() => {
-    router.visit(route('admin.role'), {
+    router.visit(route('admin.video'), {
     method: 'get',
     data: pickBy(form),
     preserveState: true 
@@ -141,23 +162,8 @@ watch(form, debounce(() => {
 const perPage = ref(5);
 onMounted(() => {
     perPage.value = urlParams.get('perPage') || usePage().props.perPage;
-   emit.emit('pageName', 'Role Management',[{title: "Role List", routeName:"admin.role"}]);
-
-    emit.on('deleteConfirm', function (arg1) {
-        deleteConfirm(arg1);
-    });
-
+   emit.emit('pageName', 'Video Management',[{title: "Video List", routeName:"admin.video"}]);
 });
-
-
-const deleteRecode = (id) => {
- sw.confirm('deleteConfirm',id);
-}
-
-const deleteConfirm = (id) => {
-    alert('working on it')
-    // router.delete(route('admin.deleteCategory',id));
-} 
 
 
 
